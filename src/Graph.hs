@@ -49,7 +49,7 @@ updateGraphState dt (g, vec) = (g, vec')
     repulsion i up =
       Prelude.foldl (<+>) (Vec2 (0,0)) [ diffdecay2 up (pos (vec ! iv)) | iv <- [0..last], iv /= i ]
     attraction i up =
-      Prelude.foldl (<+>) (Vec2 (0,0)) [ spring up (pos (vec ! iv)) | (i', iv) <- edges g, i' == i ]
+      Prelude.foldl (<+>) (Vec2 (0,0)) [ spring up (pos (vec ! (j+k-i))) | (j, k) <- edges g, j == i || k == i ]
       where spring u v = let vec = u <-> v; d = norme vec in log (d / 100) -* normalize vec
 
     totalForces i v = (replC -* repulsion i v) <-> (attrC -* attraction i v)

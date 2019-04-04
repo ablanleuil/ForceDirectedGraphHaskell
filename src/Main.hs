@@ -14,13 +14,15 @@ main :: IO ()
 main = do
   initializeAll
 
-  let mon_graph = (buildG (0,4) [(0, 1), (1, 0), (0, 2), (2, 0), (1, 3), (3, 1)
-                                ,(2, 4), (4, 2), (3, 4), (4, 3)]
+  let mon_graph = (buildG (0,5) [(0, 1), (0, 2), (1, 3)
+                                ,(2, 4), (3, 4)
+                                ,(0, 5), (1, 5), (2, 5), (3, 5), (4, 5)]
                   , V.fromList [ GNode (Vec2 (100, 100)) (Vec2 (0, 0))
                                , GNode (Vec2 (100, 300)) (Vec2 (0, 0))
                                , GNode (Vec2 (300, 300)) (Vec2 (0, 0))
                                , GNode (Vec2 (500, 300)) (Vec2 (0, 0))
-                               , GNode (Vec2 (400, 400)) (Vec2 (0, 0))])
+                               , GNode (Vec2 (400, 400)) (Vec2 (0, 0))
+                               , GNode (Vec2 (100, 200)) (Vec2 (0, 0))])
 
 
   window <- createWindow "My SDL Application" defaultWindow

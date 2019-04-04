@@ -3,6 +3,7 @@ module Main where
 
 import           Control.Monad      (forM_, unless)
 import           Data.Graph         as G
+import           Data.Maybe
 import           Data.Vector        as V
 import           Graph
 import           Linear             (V2 (..), V4 (..))
@@ -40,7 +41,9 @@ appLoop dragi g@(gr, v) renderer = do
           _ -> False
       qPressed = Prelude.any eventIsQPress events
 
-  (P (V2 mx my)) <- getAbsoluteMouseLocation
+  (P (V2 mx' my')) <- getAbsoluteMouseLocation
+  let mx = realToFrac mx'
+      my = realToFrac my'
   mb <- getMouseButtons
 
 
@@ -61,10 +64,14 @@ appLoop dragi g@(gr, v) renderer = do
 
   let (ngr, nv) = updateGraphState 1 g
 
-  let ndragi = if mb ButtonLeft then 0 else (-1)
+  let ndragi
+        | not $ mb ButtonLeft = -1
+        | dragi /= (-1) = dragi
+        | otherwise = fromMaybe (-1) $ V.findIndex (\(GNode (Vec2 (x,y)) _) ->
+          mx > x-25 && mx < x+25 && my > y-25 && my < y+25) v
 
   let nv' = if ndragi /= -1 then
-              nv // [(ndragi, GNode (Vec2 (realToFrac mx, realToFrac my)) (Vec2 (0,0)))]
+              nv // [(ndragi, GNode (Vec2 (mx, my)) (Vec2 (0,0)))]
             else nv
 
   unless qPressed (appLoop ndragi (ngr, nv') renderer)
